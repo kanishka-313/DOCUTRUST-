@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+env/
+.env
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.angular/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Models cache (sentence-transformers)
+.cache/
+models/

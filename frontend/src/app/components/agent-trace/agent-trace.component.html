@@ -1,0 +1,44 @@
+<div class="trace-panel">
+  <div class="panel-header">
+    <span class="eyebrow">CRAG pipeline</span>
+    @if (streaming()) {
+      <span class="live"><span class="dot"></span>EVALUATING</span>
+    }
+  </div>
+
+  <!-- Stage rail -->
+  <div class="rail">
+    @for (s of stages; track s.key; let i = $index) {
+      <div class="stage" [class.running]="stageState()[s.key] === 'running'"
+                          [class.done]="stageState()[s.key] === 'done'"
+                          [class.failed]="stageState()[s.key] === 'failed'">
+        <div class="seq mono">{{ (i + 1).toString().padStart(2, '0') }}</div>
+        <div class="stage-label">{{ s.label }}</div>
+        @if (s.key === 'Decision' && decision()) {
+          <div class="decision-tag mono">{{ decisionLabel(decision()) }}</div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Live trace log -->
+  <div class="trace-header">
+    <span class="eyebrow">Trace · {{ entries().length }}</span>
+  </div>
+
+  <div class="trace-log">
+    @if (entries().length === 0) {
+      <div class="empty">Submit a question to start the pipeline.</div>
+    }
+    @for (e of entries(); track $index) {
+      <div class="trace-line">
+        <div class="meta">
+          <span class="ts mono">{{ formatTime(e.ts) }}</span>
+          <span class="agent">{{ e.agent }}</span>
+          <span class="status status-{{ e.status }}">{{ e.status }}</span>
+        </div>
+        <div class="msg">{{ e.message }}</div>
+      </div>
+    }
+  </div>
+</div>
