@@ -1,0 +1,39 @@
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark mono">D⋅T</span>
+      <span class="brand-name">DocuTrust</span>
+    </div>
+    <div class="tagline mono">enterprise · corrective · cited</div>
+  </header>
+
+  <main class="workspace">
+    <!-- Left: corpus -->
+    <aside class="left-pane">
+      <app-document-uploader (uploaded)="onUploaded()"></app-document-uploader>
+      <app-document-list [refreshToken]="docsRefresh()"></app-document-list>
+    </aside>
+
+    <!-- Center: question + answer -->
+    <section class="center-pane">
+      <app-query-panel (queryStarted)="onQueryStarted($event)"></app-query-panel>
+      <app-answer-view
+        [queryId]="activeQueryId()"
+        [refreshToken]="answerRefresh()"
+      ></app-answer-view>
+    </section>
+
+    <!-- Right: pipeline trace -->
+    <aside class="right-pane">
+      <app-agent-trace
+        [queryId]="activeQueryId()"
+        (streamEnded)="onStreamEnded()"
+      ></app-agent-trace>
+    </aside>
+  </main>
+
+  <footer class="bottombar mono">
+    <span>Validated answers · sourced citations · self-correcting retrieval</span>
+    <span class="faint">v1.0</span>
+  </footer>
+</div>

@@ -1,0 +1,64 @@
+<div class="answer-panel">
+  @if (query(); as q) {
+    <header class="q-header">
+      <div class="q-meta">
+        <span class="status status-{{ q.status }}">{{ q.status }}</span>
+        @if (q.decision) {
+          <span class="decision-pill">{{ decisionLabel(q.decision) }}</span>
+        }
+        <span class="when mono">{{ q.created_at | date:'short' }}</span>
+      </div>
+      <h1 class="question">{{ q.question }}</h1>
+    </header>
+
+    @if (q.status === 'running' || q.status === 'pending') {
+      <div class="composing">
+        <div class="composing-bar"><div></div></div>
+        <p>The retriever is searching, the grader is checking relevance, and the generator is drafting the answer with citations.</p>
+      </div>
+    }
+
+    @if (q.status === 'failed') {
+      <div class="failure">
+        <div class="eyebrow">Pipeline failed</div>
+        <pre>{{ q.error }}</pre>
+      </div>
+    }
+
+    @if (answerHtml()) {
+      <article class="answer" [innerHTML]="answerHtml()"></article>
+    }
+
+    @if (q.citations && q.citations.length > 0) {
+      <section class="citations">
+        <h3 class="cite-title">Sources</h3>
+        <ol class="cite-list">
+          @for (c of q.citations; track $index) {
+            <li class="cite">
+              <div class="cite-head">
+                <span class="cite-id mono">S{{ $index + 1 }}</span>
+                @if (isWeb(c.source)) {
+                  <a [href]="href(c.source)" target="_blank" rel="noopener" class="cite-label">
+                    {{ citationLabel(c.source) }} ↗
+                  </a>
+                } @else {
+                  <span class="cite-label">{{ citationLabel(c.source) }}</span>
+                }
+                @if (c.score !== null) {
+                  <span class="cite-score mono">sim {{ c.score }}</span>
+                }
+              </div>
+              <p class="cite-snippet">{{ c.snippet }}</p>
+            </li>
+          }
+        </ol>
+      </section>
+    }
+  } @else {
+    <div class="placeholder">
+      <div class="mark mono">D⋅T</div>
+      <h2>DocuTrust</h2>
+      <p>A self-correcting document-aware assistant. Upload PDFs, ask a question, and watch the retrieval → grade → decide → generate pipeline produce a cited answer. When the corpus doesn't have what's needed, a web fallback kicks in automatically.</p>
+    </div>
+  }
+</div>

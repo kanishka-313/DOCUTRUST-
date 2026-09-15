@@ -1,0 +1,28 @@
+<div
+  class="dropzone"
+  [class.dragging]="dragOver()"
+  [class.busy]="uploading()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+>
+  <input #fileInput type="file" accept=".pdf" multiple hidden (change)="onPick($event)" />
+
+  @if (!uploading()) {
+    <div class="dropzone-inner">
+      <div class="icon">↓</div>
+      <div class="title">Drop PDFs here</div>
+      <button class="browse" (click)="fileInput.click()">or browse files</button>
+      <div class="hint">PDF · up to 25 MB each</div>
+    </div>
+  } @else {
+    <div class="busy-inner">
+      <div class="bar"><div class="bar-fill"></div></div>
+      <div class="progress-text">{{ progress() }}</div>
+    </div>
+  }
+</div>
+
+@if (error()) {
+  <div class="error">{{ error() }}</div>
+}
